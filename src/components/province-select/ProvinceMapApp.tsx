@@ -13,7 +13,7 @@ interface PMAppProps {
 
 
 function PApp(defaultData: PMAppProps) {
-    console.log(defaultData)
+    console.log("reload:", defaultData)
     let selectedProvince: selectedProvinceType | undefined = defaultData.selectedProvince;
     let selectedCity: selectedCityType | undefined = defaultData.selectedCity;
     let curData: any = defaultData.curMapData
@@ -21,13 +21,13 @@ function PApp(defaultData: PMAppProps) {
     const selectProvinceHandler = (city: selectedCityType) => {
         selectedCity = city
         defaultData.setSelectedCity(city)
-        console.log(selectedCity.name, selectedCity.faName)
+        curData = defaultData.curMapData
+        console.log("select city:", selectedCity)
 
     };
     {/*"30, 70, 181"*/
     }
-
-    if (selectedProvince?.name) {
+    if (selectedProvince?.name && defaultData.curMapData) {
         let cityName = (selectedCity?.name) || ''
         return (
             <div style={{fontFamily: "vazir"}} className="map-item">
@@ -46,9 +46,8 @@ function PApp(defaultData: PMAppProps) {
                 />
             </div>
         );
-    }
-    else
-        return (<div/>)
+    } else
+        return (<div className="map-item fix-width"/>)
 }
 
 export default PApp;

@@ -3,49 +3,41 @@ import MApp from './MapApp';
 import PApp from './ProvinceMapApp';
 import React, {useEffect} from "react";
 import {useState} from "react";
+import {useMapStatistic, useProvinceMapStatistic} from "../api/statistics-data"
+import {selectedCityType} from "react-iran-provinces-map/dist/esm/interfaces";
+import {selectedProvinceType} from "react-iran-map/dist/esm/interfaces";
 
 function App() {
     // const default_province = {name: "tehran", faName: "تهران"}
-    const noSelectedData = {name: undefined, faName: undefined}
+    const noSelectedProvince: selectedProvinceType = {name: undefined, faName: undefined}
+    const noSelectedCity: selectedCityType = {name: undefined, faName: undefined}
+    console.log('App load:', noSelectedCity, noSelectedProvince)
 
-    const [selectedProvince, setSelectedProvince] = useState(noSelectedData);
-    const [selectedCity, setSelectedCity] = useState(noSelectedData);
-    const [mapData, setMapData] = useState({});
-    const [pMapData, setPMapData] = useState({});
+    const [selectedProvince, _setSelectedProvince] = useState(noSelectedProvince);
+    const [selectedCity, setSelectedCity] = useState(noSelectedCity);
+    const {mapStat, isLoading, isError} = useMapStatistic()
+    const {provinceMapStat, isLoadingP, isErrorP} = useProvinceMapStatistic(selectedProvince?.name)
 
-    useEffect(() => {
-        fetch('http://127.0.0.1:5000/provinces')
-            .then(response => response.json())
-            .then(json => {
-                setMapData(json);
-                console.log(json);
-            })
-            .catch(error => console.error(error));
-    }, []);
+    function setSelectedProvince(value: selectedProvinceType) {
+        setSelectedCity(noSelectedCity)
+        _setSelectedProvince(value)
+    }
 
-    useEffect(() => {
-        let p_name = selectedProvince?.name
-        setSelectedCity(noSelectedData)
-        if (p_name !== undefined)
-            fetch('http://127.0.0.1:5000/provinces/' + selectedProvince.name)
-                .then(response => response.json())
-                .then(json => {
-                    setPMapData(json);
-                    console.log(json);
-                })
-                .catch(error => console.error(error));
-    }, [selectedProvince]);
+    if (!isLoading && !isError)
 
-    return (
-        <div>
-            <div className="root">
-                <PApp curMapData={pMapData} selectedProvince={selectedProvince}
-                      selectedCity={selectedCity} setSelectedCity={setSelectedCity}/>
-                <MApp theMapData={mapData} selectedProvince={selectedProvince}
-                      setSelectedProvince={setSelectedProvince}/>
+        return (
+            <div>
+                <div className="root">
+                    <PApp curMapData={provinceMapStat} selectedProvince={selectedProvince}
+                          selectedCity={selectedCity} setSelectedCity={setSelectedCity}/>
+                    <MApp theMapData={mapStat} selectedProvince={selectedProvince}
+                          setSelectedProvince={setSelectedProvince}/>
+                </div>
             </div>
-        </div>
-    )
+        )
+    else
+        return (<div> Loading ...</div>)
+
 }
 
 export default App

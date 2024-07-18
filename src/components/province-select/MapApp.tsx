@@ -11,18 +11,17 @@ interface MAppProps {
 }
 
 function MApp(mdata: MAppProps) {
-    console.log(mdata)
+    console.log("map reload:", mdata)
     let selectedProvince = mdata.selectedProvince
 
     const selectProvinceHandler = (province: selectedProvinceType) => {
-        console.log(province)
         if (province.name) {
             selectedProvince = province
             if (mdata.setSelectedProvince)
                 mdata.setSelectedProvince(selectedProvince)
 
         }
-        console.log(selectedProvince, province.faName)
+        console.log("select province:", province.faName, selectedProvince)
 
     }
 
