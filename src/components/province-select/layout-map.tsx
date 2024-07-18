@@ -6,7 +6,10 @@ import {useState} from "react";
 
 function App() {
     // const default_province = {name: "tehran", faName: "تهران"}
-    const [selectedProvince, setSelectedProvince] = useState({name: undefined, faName:undefined});
+    const noSelectedData = {name: undefined, faName: undefined}
+
+    const [selectedProvince, setSelectedProvince] = useState(noSelectedData);
+    const [selectedCity, setSelectedCity] = useState(noSelectedData);
     const [mapData, setMapData] = useState({});
     const [pMapData, setPMapData] = useState({});
 
@@ -22,6 +25,7 @@ function App() {
 
     useEffect(() => {
         let p_name = selectedProvince?.name
+        setSelectedCity(noSelectedData)
         if (p_name !== undefined)
             fetch('http://127.0.0.1:5000/provinces/' + selectedProvince.name)
                 .then(response => response.json())
@@ -35,7 +39,8 @@ function App() {
     return (
         <div>
             <div className="root">
-                <PApp curMapData={pMapData} selectedProvince={selectedProvince}/>
+                <PApp curMapData={pMapData} selectedProvince={selectedProvince}
+                      selectedCity={selectedCity} setSelectedCity={setSelectedCity}/>
                 <MApp theMapData={mapData} selectedProvince={selectedProvince}
                       setSelectedProvince={setSelectedProvince}/>
             </div>

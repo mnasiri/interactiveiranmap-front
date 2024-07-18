@@ -7,28 +7,32 @@ import {mapDataType, selectedProvinceType} from "react-iran-map/dist/esm/interfa
 interface PMAppProps {
     curMapData: mapDataType
     selectedProvince: selectedProvinceType | undefined
+    selectedCity: selectedCityType | undefined
+    setSelectedCity: Function
 }
 
 
 function PApp(defaultData: PMAppProps) {
     console.log(defaultData)
     let selectedProvince: selectedProvinceType | undefined = defaultData.selectedProvince;
-    let selectedCity: string | undefined = undefined
+    let selectedCity: selectedCityType | undefined = defaultData.selectedCity;
     let curData: any = defaultData.curMapData
-    // if (selectedProvince?.name)
-    //     curData = defaultData.thePMapData[selectedProvince.name]
 
     const selectProvinceHandler = (city: selectedCityType) => {
-        selectedCity = city.name
-        console.log(selectedCity, city.faName)
+        selectedCity = city
+        defaultData.setSelectedCity(city)
+        console.log(selectedCity.name, selectedCity.faName)
 
     };
-    {/*"30, 70, 181"*/}
+    {/*"30, 70, 181"*/
+    }
 
-    if (selectedProvince?.name)
+    if (selectedProvince?.name) {
+        let cityName = (selectedCity?.name) || ''
         return (
             <div style={{fontFamily: "vazir"}} className="map-item">
                 <h1 className="province-header">{selectedProvince.faName}</h1>
+                <h2 className="province-header">{selectedCity?.faName}</h2>
                 <IranProvincesMap
                     province={selectedProvince.name}
                     provinceData={curData}
@@ -42,6 +46,7 @@ function PApp(defaultData: PMAppProps) {
                 />
             </div>
         );
+    }
     else
         return (<div/>)
 }
